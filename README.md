@@ -4,7 +4,7 @@ This is custom select plugin
 
 **USAGE**
 
-Add script and css from dist folder. Awake-select.js before your main script file.
+Add script and css from dist folder to your .html/.php file. Awake-select.js before your main script file.
 
 
 
