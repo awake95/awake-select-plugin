@@ -13,11 +13,17 @@ const select = new AwakeSelect('#selector', {
 })
 
 OPTIONS:
+
 {
+
   position: string, // default 'auto', variants: ['top', 'bottom', 'auto]
+  
   search: boolean, // default false
+  
   placeholder_text: string, //default "Type your text..."
+  
   customOptionsText: array, // default empty, add your own content after option text
+  
 }
 
 METHODS:
