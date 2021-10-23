@@ -4,7 +4,7 @@ This is custom select plugin
 
 **USAGE**
 
-Add script and css from dist folder to your .html/.php file. Awake-select.js before your main script file.
+    Add script and css from dist folder to your .html/.php file. Awake-select.js before your main script file.
 
 
 
@@ -12,7 +12,7 @@ In your main js file:
 
 // Usage example, where "selector" is selector for DOM element, "options" is Object
 
-const select = new AwakeSelect('selector', options)
+    const select = new AwakeSelect('selector', options)
 
 
 **OPTIONS: {**
