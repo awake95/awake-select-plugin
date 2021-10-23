@@ -1,7 +1,18 @@
+body {
+  font-family: "Open Sans", sans-serif ;
+}
+
 .aw-select {
   margin-top: 20px;
   max-width: 200px;
+  width: 100%;
   position: relative;
+  box-sizing: border-box;
+  padding: 0;
+
+  * {
+    box-sizing: border-box;
+  }
 
   &__single {
     border: 1px solid #cdcdcd;
@@ -12,6 +23,7 @@
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+    width: 100%;
 
     &--arrow {
       text-align: right;
@@ -37,11 +49,27 @@
     list-style: none;
     background: #ffffff;
     border: 1px solid #cdcdcd;
+    border-top: 0;
     border-radius: 5px;
     overflow-y: auto;
+    overflow-x: hidden;
     max-height: 150px;
     scrollbar-width: thin;
     z-index: -1;
+
+    &.animation {
+      display: block;
+      visibility: hidden;
+      z-index: -1;
+    }
+
+    &.bottom, &.bottom-position {
+      border-radius: 5px 5px 0 0;
+      bottom: 100%;
+      border-top: 1px solid #cdcdcd;
+      border-bottom: 0;
+      top: unset;
+    }
 
     &::-webkit-scrollbar {
       width: 7px;
@@ -56,6 +84,7 @@
       cursor: pointer;
       padding: 5px 10px;
       margin: 0;
+      width: 100%;
       border-bottom: 1px solid #cdcdcd;
 
       &:last-child {
@@ -63,6 +92,10 @@
       }
 
       &:hover {
+        background: #ededed;
+      }
+
+      &.chosen {
         background: #ededed;
       }
     }
@@ -85,7 +118,6 @@
   &.open {
     .aw-select {
       &__single {
-        border-bottom: 0;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
 
@@ -98,7 +130,6 @@
 
         &.bottom, &.bottom-position {
           border-bottom: 1px solid #cdcdcd;
-          border-top: 0;
           border-radius: 0 0 5px 5px;
         }
       }
@@ -107,12 +138,18 @@
         display: block;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+        border-top: 0;
         z-index: 99;
 
         &.bottom, &.bottom-position {
           border-radius: 5px 5px 0 0;
-          bottom: 100%;
-          top: unset;
+          border-top: 1px solid #cdcdcd;
+        }
+
+        &.animation {
+          display: block;
+          visibility: visible;
+          z-index: 99;
         }
       }
     }

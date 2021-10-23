@@ -6,22 +6,46 @@ class AwakeSelect {
   constructor ( element, options ) {
     this.$select = document.querySelector( element );
     this.$options = options;
+    this.$options.animation = this.$options.animation ?? false;
+    this.$options.animationDuration = this.$options.animationDuration ? +this.$options.animationDuration / 1000 : 200 / 1000;
     this.$options.position = this.$options.position ?? 'auto';
     this.$newSelect = null;
+    this.$multipleSelect = null;
+    this.$multipleSelectOptionsChosen = null;
     this.$searchInput = null;
+    this.$dropdownHeight = 0;
+    this.$options.multiple = this.$options.multiple ?? false;
+
+    console.log(this.$select);
 
     if ( this.$select && this.$select.querySelectorAll( 'option' ).length > 0 ) {
       this.#render();
       this.#assign();
     } else {
-      console.error( `There is no element like ${ element } or option length equals to 0` );
+      if (this.$select.tagName.toLowerCase() !== 'select') {
+        console.error( `Element ${ element } is not tag select` );
+      }else {
+        console.error( `There is no element like ${ element } or option length equals to 0` );
+      }
     }
+  }
+
+  #getMultipleTemplate = ($sel) => {
+    const selectedOptions = [...$sel.querySelectorAll('option')].map(option => {
+      if (option.selected) {
+        return `<li class="aw-select__multiple-item" data-value="${ option.value }" data-type="multiple-option">
+            ${ option.textContent }
+        </li>`;
+      }
+    })
+
+    return selectedOptions ? selectedOptions.join( '' ) : null;
   }
 
   #getTemplate = ( $el, $defaultValue, $options ) => {
     const select_options = [ ...$el.querySelectorAll( 'option' ) ].map( (item, index) => {
       return `
-     <li class="aw-select__dropdown--item ${ $defaultValue.toLowerCase().trim() === item.textContent.toLowerCase().trim() ? 'chosen' : '' }" data-type="option" data-value="${ item.value }">
+     <li class="aw-select__dropdown--item ${item.selected ? 'chosen' : '' }" data-type="option" data-value="${ item.value }">
         ${ item.textContent }
         <span class="aw-select__dropdown--item-customContent" style="pointer-events: none">${ $options.customOptionsText?.length > 0 ? ($options.customOptionsText[index] ?? '') : '' }</span>
     </li>
@@ -32,7 +56,7 @@ class AwakeSelect {
         <span class="aw-select__single--text" style="pointer-events: none" data-type="text">${ $defaultValue ?? 'Choose an option' }</span>
         <span class="aw-select__single--arrow" style="pointer-events: none" data-type="arrow"></span>
     </div>
-    <ul class="aw-select__dropdown ${$options.position ?? ''}" aria-expanded="false" aria-hidden="true" style="${ $options.position === 'top' ? 'top: "100%";' : '' } ${ $options.position === 'bottom' ? 'bottom: "100%";' : '' }">
+    <ul class="aw-select__dropdown ${$options.position ?? ''}  ${$options.animation ? 'animation' : ''}" aria-expanded="false" aria-hidden="true" style="${ $options.position === 'top' ? 'top: "100%";' : '' } ${ $options.position === 'bottom' ? 'bottom: "100%";' : '' }">
         ${ $options.search ? `<input class="aw-select__dropdown--input" type='text' data-search placeholder="${ $options.placeholder_text ?? 'Type your text...' }">` : '' }
         ${ select_options.join( '' ) }
     </ul>
@@ -52,10 +76,34 @@ class AwakeSelect {
       defaultValue = option.textContent;
     }
 
+    console.log(defaultValue);
+
     this.$newSelect = document.createElement( 'div' );
     this.$newSelect.classList.add( 'aw-select' );
     this.$newSelect.innerHTML = this.#getTemplate( this.$select, this.$options.defaultValue ?? defaultValue, this.$options );
     this.$select.parentNode.insertBefore( this.$newSelect, this.$select.nextSibling );
+    if (this.$options.multiple) {
+      this.$multipleSelect = document.createElement( 'div' );
+      this.$multipleSelectOptionsChosen = document.createElement( 'div' );
+      this.$multipleSelect.classList.add( 'aw-multiple-select' );
+      this.$multipleSelectOptionsChosen.classList.add( 'aw-multiple-select-chosen' );
+      this.$select.parentNode.insertBefore( this.$multipleSelect, this.$select.nextSibling );
+
+      const awSelector = this.$multipleSelect.querySelector('.aw-select');
+      this.$multipleSelect.insertBefore( this.$multipleSelectOptionsChosen, awSelector );
+      this.$multipleSelectOptionsChosen.innerHTML =  this.#getMultipleTemplate(this.$select);
+
+      this.$multipleSelect.appendChild(this.$newSelect)
+    }
+    this.$dropdownHeight = this.$newSelect.querySelector('.aw-select__dropdown').clientHeight
+
+    if (this.$options.position === 'auto') {
+      this.addingClassForDropdownPosition();
+    }
+
+    if (this.$options.animation) {
+      this.$newSelect.querySelector('.aw-select__dropdown').style.height = '0';
+    }
     this.$searchInput = this.$newSelect.querySelector( 'input[data-search]' ) ?? null;
   }
 
@@ -68,6 +116,10 @@ class AwakeSelect {
     this.searchInputHandler = this.searchInputHandler.bind( this );
     this.clickOutsideHandler = this.clickOutsideHandler.bind( this );
     this.dropdownPositionResizeHandler = this.dropdownPositionResizeHandler.bind( this )
+    if (this.$options.multiple) {
+      this.multipleItemClickHandler = this.multipleItemClickHandler.bind(this)
+      this.$multipleSelectOptionsChosen.addEventListener('click', this.multipleItemClickHandler);
+    }
     this.$newSelect.addEventListener( 'click', this.clickHandler );
 
     if (this.$options.position === 'auto') {
@@ -138,6 +190,27 @@ class AwakeSelect {
     }
   }
 
+  multipleItemClickHandler(event) {
+    let target = event.target;
+    let { type, value } = target.dataset;
+
+    if (type === 'multiple-option') {
+      const selectOptions = [...this.$select.querySelectorAll('option')].find(option => {
+        if (option.value === value) {
+          option.selected = false;
+        }
+      })
+
+      const newSelectOptions = [...this.$newSelect.querySelectorAll('li[data-type="option"]')].find(option => {
+        if (option.dataset.value === value) {
+          option.classList.remove('chosen');
+        }
+      })
+
+      target.remove();
+    }
+  }
+
   /**
    * Click handler for opening and closing dropdown, choosing option
    * @param event
@@ -149,20 +222,42 @@ class AwakeSelect {
 
     if ( type === 'single') {
       this.toggle();
-
-      if (this.$options.position === 'auto') {
-        this.addingClassForDropdownPosition();
-      }
     }
 
     if ( type === 'option') {
       let target = event.target;
-      target.parentNode.querySelectorAll( '.aw-select__dropdown--item' ).forEach( item => item.classList.remove( 'chosen' ) );
-      target.classList.add( 'chosen' );
-      this.$select.value = event.target.dataset.value;
-      this.$newSelect.querySelector( '.aw-select__single--text' ).textContent = target.childNodes[0].textContent;
-      this.removeSearchValue();
-      this.close();
+
+      if (this.$options.multiple) {
+
+        const options = [...this.$select.querySelectorAll('option')].find(item => {
+          if (item.value === target.dataset.value) {
+            if (target.classList.contains('chosen')) {
+              target.classList.remove('chosen');
+              item.selected = false;
+              [...this.$multipleSelectOptionsChosen.querySelectorAll('.aw-select__multiple-item')].find(option => {
+                if (option.dataset.value === target.dataset.value) {
+                  option.remove();
+                }
+              })
+            } else {
+              target.classList.add( 'chosen' );
+              item.selected = true;
+              const li = document.createElement('li');
+              li.classList.add('aw-select__multiple-item');
+              li.setAttribute('data-value', item.value);
+              li.textContent = item.textContent;
+              this.$multipleSelectOptionsChosen.append(li)
+            }
+          }
+        })
+      } else {
+        target.parentNode.querySelectorAll( '.aw-select__dropdown--item' ).forEach( item => item.classList.remove( 'chosen' ) );
+        target.classList.add( 'chosen' );
+        this.$select.value = event.target.dataset.value;
+        this.$newSelect.querySelector( '.aw-select__single--text' ).textContent = target.childNodes[0].textContent;
+        this.removeSearchValue();
+        this.close();
+      }
     }
   }
 
@@ -268,7 +363,15 @@ class AwakeSelect {
       awSelects.forEach( item => item.classList.remove( 'open' ) )
     }
 
+    if (this.$options.animation) {
+      dropdown.style.height = this.$dropdownHeight + 'px';
+      this.$newSelect.querySelector('.aw-select__dropdown').style.transition = `all ${this.$options.animationDuration.toString()}s`
+    }
+
     this.$newSelect.classList.add( 'open' );
+
+
+
     dropdown.setAttribute( 'aria-expanded', 'true' );
     dropdown.setAttribute( 'aria-hidden', 'false' );
   }
@@ -280,6 +383,17 @@ class AwakeSelect {
   close () {
     const dropdown = this.$newSelect.querySelector( '.aw-select__dropdown' );
     this.$newSelect.classList.remove( 'open' );
+
+    dropdown.scrollTo({
+      top: 0,
+      behavior: 'auto'
+    });
+
+    if (this.$options.animation) {
+      this.$newSelect.querySelector('.aw-select__dropdown').style.height = '0';
+      this.$newSelect.querySelector('.aw-select__dropdown').style.transition = `all ${this.$options.animationDuration.toString()}s`
+    }
+
     this.$newSelect.querySelector( '.aw-select__dropdown' ).setAttribute( 'aria-expanded', 'false' );
     dropdown.setAttribute( 'aria-hidden', 'true' );
   }
