@@ -1,0 +1,120 @@
+.aw-select {
+  margin-top: 20px;
+  max-width: 200px;
+  position: relative;
+
+  &__single {
+    border: 1px solid #cdcdcd;
+    border-radius: 5px;
+    padding: 5px 10px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+
+    &--arrow {
+      text-align: right;
+      border: solid black;
+      border-width: 0 1px 1px 0;
+      display: block;
+      margin-top: -5px;
+      padding: 3px;
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      transition: transform .2s;
+    }
+  }
+
+  &__dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: #ffffff;
+    border: 1px solid #cdcdcd;
+    border-radius: 5px;
+    overflow-y: auto;
+    max-height: 150px;
+    scrollbar-width: thin;
+    z-index: -1;
+
+    &::-webkit-scrollbar {
+      width: 7px;
+      background: #ededed;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #cdcdcd;
+    }
+
+    &--item {
+      cursor: pointer;
+      padding: 5px 10px;
+      margin: 0;
+      border-bottom: 1px solid #cdcdcd;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &:hover {
+        background: #ededed;
+      }
+    }
+
+    &--input[type="text"] {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid #cdcdcd;
+      padding: 8px 10px;
+
+      &:focus,
+      &:active {
+        outline: none;
+        box-shadow: none;
+        border-color: inherit;
+      }
+    }
+  }
+
+  &.open {
+    .aw-select {
+      &__single {
+        border-bottom: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+
+        &--arrow {
+          margin-top: 2px;
+          transform: rotate(225deg);
+          -webkit-transform: rotate(225deg);
+          transition: transform .2s;
+        }
+
+        &.bottom, &.bottom-position {
+          border-bottom: 1px solid #cdcdcd;
+          border-top: 0;
+          border-radius: 0 0 5px 5px;
+        }
+      }
+
+      &__dropdown {
+        display: block;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        z-index: 99;
+
+        &.bottom, &.bottom-position {
+          border-radius: 5px 5px 0 0;
+          bottom: 100%;
+          top: unset;
+        }
+      }
+    }
+  }
+}
