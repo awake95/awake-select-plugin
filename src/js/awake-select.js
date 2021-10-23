@@ -16,8 +16,6 @@ class AwakeSelect {
     this.$dropdownHeight = 0;
     this.$options.multiple = this.$options.multiple ?? false;
 
-    console.log(this.$select);
-
     if ( this.$select && this.$select.querySelectorAll( 'option' ).length > 0 ) {
       this.#render();
       this.#assign();
@@ -33,7 +31,7 @@ class AwakeSelect {
   #getMultipleTemplate = ($sel) => {
     const selectedOptions = [...$sel.querySelectorAll('option')].map(option => {
       if (option.selected) {
-        return `<li class="aw-select__multiple-item" data-value="${ option.value }" data-type="multiple-option">
+        return `<li class="aw-multiple-select__item" data-value="${ option.value }" data-type="multiple-option">
             ${ option.textContent }
         </li>`;
       }
@@ -76,15 +74,14 @@ class AwakeSelect {
       defaultValue = option.textContent;
     }
 
-    console.log(defaultValue);
-
     this.$newSelect = document.createElement( 'div' );
     this.$newSelect.classList.add( 'aw-select' );
     this.$newSelect.innerHTML = this.#getTemplate( this.$select, this.$options.defaultValue ?? defaultValue, this.$options );
     this.$select.parentNode.insertBefore( this.$newSelect, this.$select.nextSibling );
+
     if (this.$options.multiple) {
       this.$multipleSelect = document.createElement( 'div' );
-      this.$multipleSelectOptionsChosen = document.createElement( 'div' );
+      this.$multipleSelectOptionsChosen = document.createElement( 'ul' );
       this.$multipleSelect.classList.add( 'aw-multiple-select' );
       this.$multipleSelectOptionsChosen.classList.add( 'aw-multiple-select-chosen' );
       this.$select.parentNode.insertBefore( this.$multipleSelect, this.$select.nextSibling );
@@ -234,7 +231,7 @@ class AwakeSelect {
             if (target.classList.contains('chosen')) {
               target.classList.remove('chosen');
               item.selected = false;
-              [...this.$multipleSelectOptionsChosen.querySelectorAll('.aw-select__multiple-item')].find(option => {
+              [...this.$multipleSelectOptionsChosen.querySelectorAll('.aw-multiple-select__item')].find(option => {
                 if (option.dataset.value === target.dataset.value) {
                   option.remove();
                 }
@@ -243,8 +240,9 @@ class AwakeSelect {
               target.classList.add( 'chosen' );
               item.selected = true;
               const li = document.createElement('li');
-              li.classList.add('aw-select__multiple-item');
+              li.classList.add('aw-multiple-select__item');
               li.setAttribute('data-value', item.value);
+              li.setAttribute('data-type', 'multiple-option');
               li.textContent = item.textContent;
               this.$multipleSelectOptionsChosen.append(li)
             }

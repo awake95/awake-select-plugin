@@ -1,4 +1,4 @@
-const select = new AwakeSelect('#select-countries', {
+const select = new AwakeSelect('#select-country', {
   search: true,
   animation: true,
   animationDuration: 100,
