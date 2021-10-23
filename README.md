@@ -25,6 +25,10 @@ const select = new AwakeSelect('selector', options)
   
   multiple: boolean, // change new select to multiselect
   
+  animation: boolean, // add animation for dropdown
+  
+  animationDuration: number, // add animation duration, eg. 200 - equals to 0.2s
+  
   customOptionsText: array, // default empty, add your own content after option text
   
 }
