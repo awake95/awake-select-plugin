@@ -7,6 +7,7 @@ Add script and css from dist folder. Awake-select.js before your main script fil
 In your main js file: 
 
 // Usage example, where #selector is selector for DOM element
+
 const select = new AwakeSelect('#selector', {
 
 })
