@@ -36,16 +36,16 @@ const select = new AwakeSelect('selector', options)
 
 **METHODS:**
 
-open() - open select dropdown,
+    open() - open select dropdown,
 
-close() - close select dropdown,
+    close() - close select dropdown,
 
-destroy() - destroy select and show default select
+    destroy() - destroy select and show default select
 
 
 **GET METHOD:**
 
-isOpen() - get status of dropdown (is it open or close) - return boolean
+    isOpen() - get status of dropdown (is it open or close) - return boolean
 
 
 
