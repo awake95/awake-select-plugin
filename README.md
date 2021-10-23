@@ -23,6 +23,8 @@ const select = new AwakeSelect('selector', options)
   
   placeholder_text: string, //default "Type your text..."
   
+  multiple: boolean, // change new select to multiselect
+  
   customOptionsText: array, // default empty, add your own content after option text
   
 }
