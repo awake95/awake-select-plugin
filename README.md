@@ -17,19 +17,19 @@ const select = new AwakeSelect('selector', options)
 
 **OPTIONS: {**
 
-  position: string, // default 'auto', variants: ['top', 'bottom', 'auto]
+    position: string, // default 'auto', variants: ['top', 'bottom', 'auto]
   
-  search: boolean, // default false
+    search: boolean, // default false
   
-  placeholder_text: string, //default "Type your text..."
+    placeholder_text: string, //default "Type your text..."
   
-  multiple: boolean, // change new select to multiselect
+    multiple: boolean, // change new select to multiselect
   
-  animation: boolean, // add animation for dropdown
+    animation: boolean, // add animation for dropdown
   
-  animationDuration: number, // add animation duration, eg. 200 - equals to 0.2s
+    animationDuration: number, // add animation duration, eg. 200 - equals to 0.2s
   
-  customOptionsText: array, // default empty, add your own content after option text
+    customOptionsText: array, // default empty, add your own content after option text
   
 }
 
