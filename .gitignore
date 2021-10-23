@@ -1,0 +1,6 @@
+node-modules
+gulpfile.js
+package.json
+src
+/node_modules/
+/.idea/
