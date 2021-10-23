@@ -10,11 +10,9 @@ Add script and css from dist folder to your .html/.php file. Awake-select.js bef
 
 In your main js file: 
 
-// Usage example, where #selector is selector for DOM element
+// Usage example, where #selector is selector for DOM element, options is Object
 
-const select = new AwakeSelect('#selector', {
-
-})
+const select = new AwakeSelect('#selector', options)
 
 
 **OPTIONS: {**
