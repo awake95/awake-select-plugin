@@ -23,7 +23,7 @@ In your main js file:
   
     placeholder_text: string, //default "Type your text..."
   
-    multiple: boolean, // change new select to multiselect
+    multiple: boolean, // change new select to multiselect, make sure that select have multiple attribute
   
     animation: boolean, // add animation for dropdown
   
