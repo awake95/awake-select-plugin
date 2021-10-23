@@ -1,7 +1,7 @@
 # awake-select-plugin
 This is custom select plugin
 
-USAGE
+**USAGE**
 
 Add script and css from dist folder. Awake-select.js before your main script file.
 
@@ -25,7 +25,7 @@ const select = new AwakeSelect('#selector', {
   
 }
 
-METHODS:
+**METHODS:**
 
 open() - open select dropdown,
 
@@ -34,7 +34,7 @@ close() - close select dropdown,
 destroy() - destroy select and show default select
 
 
-GET METHOD: 
+**GET METHOD: **
 
 isOpen() - get status of dropdown (is it open or close) - return boolean
 
