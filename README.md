@@ -13,7 +13,7 @@ const select = new AwakeSelect('#selector', {
 
 })
 
-OPTIONS: {
+**OPTIONS: {**
 
   position: string, // default 'auto', variants: ['top', 'bottom', 'auto]
   
